@@ -42,9 +42,23 @@ fbq('init','1447335694001910');fbq('track','PageView');
 <a href="https://s.lmes.jp/landing-qr/2010276938-VRzDgVUv?uLand=tBP7GD" aria-label="無料で参加する"><img src="lp2/16_button.gif" alt="無料で参加する" width="1500" loading="lazy"></a>
 </main>
 <script>
-// 申込ボタン（エルメへのリンク）を押したら Lead を送る
+// 申込ボタン（エルメへのリンク）を押したら、Lead を送り、クリック情報を Cloudflare に保存して
+// クリックIDを cid1 でエルメへ渡す（友だち追加が完了したら、サーバーからコンバージョンAPIで CompleteRegistration を送る）
+const CLICK_API = 'https://bildram-lp.company-570.workers.dev/api/click';
+const params = new URLSearchParams(location.search);
+const cookie = name => (document.cookie.match('(?:^|; )' + name + '=([^;]*)') || [])[1] || '';
+// _fbc クッキーが無くても、広告から来た直後なら fbclid から作れる
+const fbc = () => cookie('_fbc') || (params.get('fbclid') ? `fb.1.${Date.now()}.${params.get('fbclid')}` : '');
 document.addEventListener('click', e => {
-  if (e.target.closest('a[href*="lmes.jp"]') && window.fbq) fbq('track', 'Lead', { content_name: 'AI顧問 実演説明会' });
+  const a = e.target.closest('a[href*="lmes.jp"]');
+  if (!a) return;
+  const id = [...crypto.getRandomValues(new Uint8Array(12))].map(b => (b % 36).toString(36)).join('');
+  if (window.fbq) fbq('track', 'Lead', { content_name: 'AI顧問 実演説明会' }, { eventID: `click-${id}` });
+  // text/plain にすると別ドメインでも事前確認なしで送れる
+  navigator.sendBeacon(CLICK_API, new Blob([JSON.stringify({ id, fbc: fbc(), fbp: cookie('_fbp'), url: location.href })], { type: 'text/plain' }));
+  const u = new URL(a.href);
+  u.searchParams.set('cid1', id);
+  a.href = u.toString();
 }, true);
 </script>
 </body>
