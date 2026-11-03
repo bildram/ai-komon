@@ -15,6 +15,13 @@ main{max-width:520px;margin:0 auto}
 img{display:block;width:100%;height:auto}
 a{display:block}
 </style>
+<!-- Meta Pixel（株式会社ブロー ピクセル） -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','1447335694001910');fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1447335694001910&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 </head>
 <body>
 <main>
@@ -34,5 +41,11 @@ a{display:block}
 <img src="lp2/15_entry.png" alt="申し込み" width="1500" loading="lazy">
 <a href="https://s.lmes.jp/landing-qr/2010276938-VRzDgVUv?uLand=tBP7GD" aria-label="無料で参加する"><img src="lp2/16_button.gif" alt="無料で参加する" width="1500" loading="lazy"></a>
 </main>
+<script>
+// 申込ボタン（エルメへのリンク）を押したら Lead を送る
+document.addEventListener('click', e => {
+  if (e.target.closest('a[href*="lmes.jp"]') && window.fbq) fbq('track', 'Lead', { content_name: 'AI顧問 実演説明会' });
+}, true);
+</script>
 </body>
 </html>
